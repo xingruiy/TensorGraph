@@ -3,21 +3,17 @@
 #include <vector>
 #include <tensorflow/c/c_api.h>
 
-namespace internal
-{
-    struct TensorGraphImpl;
-} // namespace internal
-
 class TensorGraph
 {
 public:
     TensorGraph();
+    ~TensorGraph();
 
     bool load_graph(std::string graph_path);
 
-    bool void create_session();
+    void create_session();
 
-    void set_allow_growth(bool allowGrowth);
+    // void set_allow_growth(bool allowGrowth);
 
     void load_custom_operators(std::vector<std::string> dllPath);
 
@@ -32,5 +28,6 @@ public:
                      std::vector<float *> &out_values);
 
 private:
-    std::shared_ptr<internal::TensorGraphImpl> impl;
+    struct TensorGraphImpl;
+    std::unique_ptr<TensorGraphImpl> impl;
 };

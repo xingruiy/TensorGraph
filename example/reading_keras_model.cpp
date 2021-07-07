@@ -12,7 +12,7 @@ int main(int argc, char **argv)
     TensorGraph graph;
     graph.load_graph(argv[1]);
     graph.create_session();
-    graph.set_allow_growth(true);
+    // graph.set_allow_growth(true);
     graph.set_input_nodes({{"Inputs", 0}});
     graph.set_output_nodes({{"Identity", 0}});
 
