@@ -45,4 +45,12 @@ You should now be able to verify that the output from the c++ program is the sam
 
 ## Use it in your program
 
-Apart from the source files, you should also include the camke file "FindTensorFlow.cmake" into your project. Also repeat step 2. when building your own software.
+Apart from the source files, you should also include the camke file ```FindTensorFlow.cmake``` into your project. You also need to repeat step 2 when building your own software.
+
+Please refer to ```scripts/generate_test_network.py``` as how to generate concrete functions from your own model. You should keep an eye on the names of the input and output node(s).
+
+```example/reading_keras_model.cpp``` demonstrates the basic usage of this library. It should be pretty straight forward to adapt it to your needs.
+
+## Loading custom operations
+
+Some models might include custom operations (e.g. PointNet++) as separate DLLs. They could be loaded with ```load_custom_operators```. This function is not yet fully tested but should work in most cases. 
