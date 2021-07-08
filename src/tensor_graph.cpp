@@ -14,15 +14,18 @@ struct TensorGraph::TensorGraphImpl
 
     ~TensorGraphImpl()
     {
-        TF_Status *status = TF_NewStatus();
-        TF_DeleteSession(session, status);
-        TF_DeleteGraph(graph);
-        TF_DeleteStatus(status);
+        if (session)
+        {
+            TF_Status *status = TF_NewStatus();
+            TF_DeleteSession(session, status);
+            TF_DeleteStatus(status);
+        }
+
+        if (graph)
+            TF_DeleteGraph(graph);
 
         for (auto lib : customOps)
-        {
             TF_DeleteLibraryHandle(lib);
-        }
     }
 
     static void free_buffer2(void *data, size_t length)
@@ -126,7 +129,8 @@ struct TensorGraph::TensorGraphImpl
         return buf;
     }
 
-    inline void set_input_nodes(std::vector<std::pair<std::string, int>> name_id_pairs)
+    inline void set_input_nodes(
+        std::vector<std::pair<std::string, int>> name_id_pairs)
     {
         std::vector<TF_Output> inputs_;
         for (auto name_id : name_id_pairs)
@@ -173,6 +177,9 @@ struct TensorGraph::TensorGraphImpl
     inline bool run_session(std::vector<TF_Tensor *> &input_values,
                             std::vector<TF_Tensor *> &output_values)
     {
+        if (session == nullptr)
+            create_session();
+
         TF_Status *status = TF_NewStatus();
         TF_SessionRun(
             session, nullptr,
